@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import com.example.zavrsnitroskovi.ui.theme.ScanReceiptActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -22,8 +23,10 @@ class AddExpenseActivity : ComponentActivity() {
         setContentView(R.layout.activity_add_expense)
         val amountTextInput = findViewById<TextInputEditText>(R.id.amountEditText)
         val addButton = findViewById<Button>(R.id.addButton)
+        val scanButton = findViewById<Button>(R.id.scanReceiptButton)
         val db = FirebaseFirestore.getInstance()
         val collectionRef = db.collection("expenses")
+
         collectionRef.get()
             .addOnSuccessListener { documents ->
                 val types = ArrayList<String>()
@@ -68,6 +71,9 @@ class AddExpenseActivity : ComponentActivity() {
                         .addOnFailureListener { e ->
                             Toast.makeText(this, "Error updating data: $e", Toast.LENGTH_SHORT).show()
                         }
+                }
+                scanButton.setOnClickListener {
+                    val intent= Intent(this, ScanReceiptActivity::class.java)
                 }
             }
             .addOnFailureListener { exception ->
