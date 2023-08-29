@@ -82,6 +82,8 @@ class MainActivity : ComponentActivity() {
                 val pieData = PieData(pieDataSet)
                 pieData.setDrawValues(true)
 
+
+
                 pieChart.data = pieData
                 pieChart.invalidate()
             }
