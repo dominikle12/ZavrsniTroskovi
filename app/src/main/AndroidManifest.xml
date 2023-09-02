@@ -17,6 +17,9 @@
         android:theme="@style/Theme.ZavrsniTroskovi"
         tools:targetApi="31">
         <activity
+            android:name=".ScannedReceiptActivity"
+            android:exported="false" />
+        <activity
             android:name=".ScanReceiptActivity"
             android:exported="false" />
         <activity

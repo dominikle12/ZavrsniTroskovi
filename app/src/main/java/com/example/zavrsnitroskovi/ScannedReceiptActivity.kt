@@ -2,7 +2,7 @@ package com.example.zavrsnitroskovi
 
 import android.app.Dialog
 import android.content.Intent
-import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,26 +12,30 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.annotation.RequiresApi
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.Date
 
-class AddExpenseActivity : ComponentActivity() {
-
-
+class ScannedReceiptActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_expense)
-        val amountTextInput = findViewById<TextInputEditText>(R.id.amountEditText)
-        val nameOfExpense = findViewById<TextInputEditText>(R.id.nameOfExpense)
-        val addButton = findViewById<Button>(R.id.addButton)
-        val scanButton = findViewById<Button>(R.id.scanReceiptButton)
+        setContentView(R.layout.activity_scanned_receipt)
+
+        val nameOfExpenseInput = findViewById<TextInputEditText>(R.id.nameOfCustomExpense)
+        val expenseValueInput = findViewById<TextInputEditText>(R.id.expense)
+
+        val customExpenseButton = findViewById<Button>(R.id.addCustomExpenseButton)
         val db = FirebaseFirestore.getInstance()
         val collectionRef = db.collection("expenses")
+
+        val data = intent.getStringExtra("barcodeData")
+
+        if(data != null){
+            val expenseData = barcodeDataToList(data)
+            nameOfExpenseInput.setText(expenseData[1])
+            expenseValueInput.setText(expenseData[0])
+        }
 
         collectionRef.get()
             .addOnSuccessListener { documents ->
@@ -43,7 +47,7 @@ class AddExpenseActivity : ComponentActivity() {
                     }
                 }
                 types.add(types.size, "Add a new type")
-                val typeSpinner = findViewById<Spinner>(R.id.typeSpinner)
+                val typeSpinner = findViewById<Spinner>(R.id.typeSpinner2)
                 val spinnerAdapter = CustomSpinnerAdapter(this, android.R.layout.simple_spinner_item, types)
                 spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 typeSpinner.adapter = spinnerAdapter
@@ -61,12 +65,12 @@ class AddExpenseActivity : ComponentActivity() {
                     override fun onNothingSelected(parent: AdapterView<*>?) {
                     }
                 }
-                addButton.setOnClickListener {
-                    if(amountTextInput.text?.isNotEmpty() == true || nameOfExpense.text?.isNotEmpty() == true){
+                customExpenseButton.setOnClickListener {
+                    if(expenseValueInput.text?.isNotEmpty() == true || expenseValueInput.text?.isNotEmpty() == true){
                         val intent = Intent(this, MainActivity::class.java)
-                        val amount = amountTextInput.text.toString().toInt()
+                        val amount = expenseValueInput.text.toString().toDouble()
                         val type = typeSpinner.selectedItem.toString()
-                        val name =  nameOfExpense.text.toString()
+                        val name = nameOfExpenseInput.text.toString()
                         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
                         val data = hashMapOf("amount" to amount, "type" to type, "name" to name, "date" to sdf.format(
                             Date()
@@ -87,11 +91,7 @@ class AddExpenseActivity : ComponentActivity() {
                     }
 
                 }
-                scanButton.setOnClickListener {
-                    val intent = Intent(this, ScanReceiptActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
+
             }
             .addOnFailureListener { exception ->
                 Log.e("AddExpenseActivity", "Error retrieving data: ${exception.message}", exception)
@@ -118,6 +118,18 @@ class AddExpenseActivity : ComponentActivity() {
         dialog.show()
     }
 
+    private fun barcodeDataToList(barcodeData : String) : ArrayList<String>{
+        val returnList : ArrayList<String> = ArrayList()
+        val list = barcodeData.lines()
 
+        val sb = StringBuilder(list[2])
+        sb.insert(list[2].count() - 2, ".")
+
+        val value = sb.toString().toDouble()
+        returnList.add(value.toString())
+        val desc = list.last()
+        returnList.add(desc)
+        return returnList
+    }
 
 }
