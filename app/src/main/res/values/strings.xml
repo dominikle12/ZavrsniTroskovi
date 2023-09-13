@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">ZavrsniTroskovi</string>
     <string name="title">Monthly expense tracker</string>
+    <string name="email">E-mail</string>
+    <string name="already_have_an_account_login">Already have an account?</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="signed">Signed</string>
+    <string name="login">Login</string>
+    <string name="don_t_have_an_account_sign_in">Dont have an account?</string>
 </resources>

@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -22,7 +23,7 @@ import java.util.Date
 
 class AddExpenseActivity : ComponentActivity() {
 
-
+    lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_expense)
@@ -30,8 +31,9 @@ class AddExpenseActivity : ComponentActivity() {
         val nameOfExpense = findViewById<TextInputEditText>(R.id.nameOfExpense)
         val addButton = findViewById<Button>(R.id.addButton)
         val scanButton = findViewById<Button>(R.id.scanReceiptButton)
+        auth = FirebaseAuth.getInstance()
         val db = FirebaseFirestore.getInstance()
-        val collectionRef = db.collection("expenses")
+        val collectionRef = db.collection(auth.uid.toString())
 
         collectionRef.get()
             .addOnSuccessListener { documents ->
@@ -69,8 +71,7 @@ class AddExpenseActivity : ComponentActivity() {
                         val name =  nameOfExpense.text.toString()
                         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
                         val data = hashMapOf("amount" to amount, "type" to type, "name" to name, "date" to sdf.format(
-                            Date()
-                        ))
+                            Date()))
 
                         collectionRef.document()
                             .set(data)
