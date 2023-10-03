@@ -32,6 +32,7 @@ class MainActivity : ComponentActivity() {
         pieChart = findViewById<PieChart>(R.id.chart)
         val addExpenseButton = findViewById<Button>(R.id.addExpenseButton)
         val logOutButton = findViewById<Button>(R.id.logOutButton)
+        val expenseListButton = findViewById<Button>(R.id.expenseListButton)
         showPieChart()
         addExpenseButton.setOnClickListener {
             val intent = Intent(this, AddExpenseActivity::class.java)
@@ -43,6 +44,10 @@ class MainActivity : ComponentActivity() {
             startActivity(intent)
             finish()
         }
+        expenseListButton.setOnClickListener {
+            val intent = Intent(this, ExpenseListActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onResume() {
@@ -52,14 +57,13 @@ class MainActivity : ComponentActivity() {
 
     private fun showPieChart(){
         val pieEntries = ArrayList<PieEntry>()
-        val label = "type"
+        val label = "Type"
         val types = ArrayList<String>()
         val expenses = mutableMapOf<String, Float>()
-        val db = FirebaseFirestore.getInstance()
-        val collectionRef = db.collection(FirebaseAuth.getInstance().uid.toString())
 
         var currentMonthYear = SimpleDateFormat("MM/yyyy").format(System.currentTimeMillis())
-
+        val db = FirebaseFirestore.getInstance()
+        val collectionRef = db.collection(FirebaseAuth.getInstance().uid.toString())
         collectionRef.get()
             .addOnSuccessListener { documents ->
                 Log.d("Main","CALLED SUCCESS")
@@ -70,15 +74,12 @@ class MainActivity : ComponentActivity() {
                     val documentMonthYear = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(dateString)
                     val documentFormattedMonthYear = SimpleDateFormat("MM/yyyy").format(documentMonthYear)
 
-                    Log.d("Main", "Date from database: {$dateString}, documentMonthYear: {$documentMonthYear}, documentFormattedMonthYear: {$documentFormattedMonthYear}")
-                    Log.d("Main", "Type: $type, ")
-                    Log.d("Main", "Current month: $currentMonthYear")
+
                     if (currentMonthYear == documentFormattedMonthYear) {
                         if (!types.contains(type)) {
                             types.add(type)
                         }
                         val amount = document.getDouble("amount")?.toFloat() ?: 0f
-                        Log.d("Main", "Amount: $amount, ")
                         totalExpense += amount
                         expenses[type] = (expenses[type] ?: 0f) + amount
                     }
@@ -86,13 +87,10 @@ class MainActivity : ComponentActivity() {
                 if(types.isNotEmpty()){
                     for (type in types) {
                         val typeValueSum = expenses[type] ?: 0f
-                        pieEntries.add(PieEntry(typeValueSum.toFloat(), type))
+                        pieEntries.add(PieEntry(typeValueSum, type))
                     }
                 }
 
-
-                Log.d("Main", expenses.toString())
-                // Set up the pie chart
                 val colors = ArrayList<Int>()
                 colors.add(Color.parseColor("#304567"))
                 colors.add(Color.parseColor("#309967"))

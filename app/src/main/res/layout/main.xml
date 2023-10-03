@@ -51,8 +51,11 @@
 
     <Button
         android:id="@+id/logOutButton"
-        android:layout_width="wrap_content"
+        android:layout_width="88dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:text="Log out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,6 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/monthTextView" />
@@ -74,6 +78,20 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:text="€"
+        android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/totalExpenseValue"
         app:layout_constraintTop_toBottomOf="@+id/monthTextView" />
+
+    <Button
+        android:id="@+id/expenseListButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Expense List"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/addExpenseButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chart" />
 </androidx.constraintlayout.widget.ConstraintLayout>

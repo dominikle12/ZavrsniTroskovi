@@ -66,7 +66,7 @@ class AddExpenseActivity : ComponentActivity() {
                 addButton.setOnClickListener {
                     if(amountTextInput.text?.isNotEmpty() == true || nameOfExpense.text?.isNotEmpty() == true){
                         val intent = Intent(this, MainActivity::class.java)
-                        val amount = amountTextInput.text.toString().toInt()
+                        val amount = amountTextInput.text.toString().toFloat()
                         val type = typeSpinner.selectedItem.toString()
                         val name =  nameOfExpense.text.toString()
                         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")

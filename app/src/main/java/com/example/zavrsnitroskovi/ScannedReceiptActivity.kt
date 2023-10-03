@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -27,16 +28,17 @@ class ScannedReceiptActivity : AppCompatActivity() {
 
         val customExpenseButton = findViewById<Button>(R.id.addCustomExpenseButton)
         val db = FirebaseFirestore.getInstance()
-        val collectionRef = db.collection("expenses")
+        val collectionRef = db.collection(FirebaseAuth.getInstance().uid.toString())
 
         val data = intent.getStringExtra("barcodeData")
+
+        Log.d("EX", data.toString())
 
         if(data != null){
             val expenseData = barcodeDataToList(data)
             nameOfExpenseInput.setText(expenseData[1])
             expenseValueInput.setText(expenseData[0])
         }
-
         collectionRef.get()
             .addOnSuccessListener { documents ->
                 val types = ArrayList<String>()
@@ -121,13 +123,14 @@ class ScannedReceiptActivity : AppCompatActivity() {
     private fun barcodeDataToList(barcodeData : String) : ArrayList<String>{
         val returnList : ArrayList<String> = ArrayList()
         val list = barcodeData.lines()
-
+        Log.d("EX", "LIST: " + list)
+        Log.d("EX", list[list.lastIndex-1])
         val sb = StringBuilder(list[2])
         sb.insert(list[2].count() - 2, ".")
 
         val value = sb.toString().toDouble()
         returnList.add(value.toString())
-        val desc = list.last()
+        val desc = list[list.lastIndex-1]
         returnList.add(desc)
         return returnList
     }

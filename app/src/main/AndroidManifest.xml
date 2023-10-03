@@ -17,15 +17,21 @@
         android:theme="@style/Theme.ZavrsniTroskovi"
         tools:targetApi="31">
         <activity
+            android:name=".YearlyGraphActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExpenseListActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.ZavrsniTroskovi">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".RegistrationActivity"
@@ -41,9 +47,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false"
-            >
-        </activity>
+            android:exported="false" />
     </application>
 
 </manifest>

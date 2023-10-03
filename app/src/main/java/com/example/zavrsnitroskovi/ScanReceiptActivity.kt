@@ -80,18 +80,14 @@ class ScanReceiptActivity : AppCompatActivity() {
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
 
-            // Preview
             val preview = Preview.Builder()
                 .build()
                 .also {
                     it.setSurfaceProvider(binding.previewView.surfaceProvider)
                 }
-
-            // Image analyzer
             val imageAnalyzer = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .setTargetResolution(Size(1920, 1080))
@@ -99,32 +95,20 @@ class ScanReceiptActivity : AppCompatActivity() {
                 .also {
                     it.setAnalyzer(cameraExecutor, BarCodeAnalyzer(this))
                 }
-
-
-            // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
             try {
-                // Unbind use cases before rebinding
                 cameraProvider.unbindAll()
-
-                // Bind use cases to camera
                 cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, imageAnalyzer
                 )
-
             } catch (exc: Exception) {
                 exc.printStackTrace()
             }
-
         }, ContextCompat.getMainExecutor(this))
     }
-
     fun getBarcodeData(barcodes : MutableList<Barcode>){
         val data = barcodes.first().rawValue.toString()
         Toast.makeText(this, "DATA: ${data}", Toast.LENGTH_SHORT)
     }
-
-
 }
 
